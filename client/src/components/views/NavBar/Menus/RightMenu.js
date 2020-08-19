@@ -8,13 +8,13 @@ import { logoutUser } from "../../../../actions/user_actions";
 import "./RightMenu.css";
 
 function RightMenu(props) {
+  const dispatch = useDispatch()
+
   const user = useSelector(state => state.user)
 
   const logoutHandler = () => {
-    const dispatch = useDispatch()
-
     dispatch(logoutUser()).then(response => {
-      if (response.status === 200) {
+      if (response.payload.success) {
         props.history.push("/login");
       } else {
         alert('Log Out Failed')

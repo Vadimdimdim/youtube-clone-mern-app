@@ -93,7 +93,7 @@ function LikeDislike(props) {
             dispatch(removeLike(variables))
                 .then(response => {
                     if (response.payload.success) {
-                        etLikes(Likes - 1)
+                        getLikes(Likes - 1)
                         setLikeAction(null)
                     } else {
                         alert('You are not allowed to do that. Please Log In stupid')
