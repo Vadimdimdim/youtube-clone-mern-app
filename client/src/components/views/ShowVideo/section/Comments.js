@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
+// import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { saveComment } from "../../../../actions/comment_actions";
 
 import { Button, Input } from 'antd';
 import SingleComment from './SingleComment';
@@ -10,6 +11,7 @@ import ReplyComment from './ReplyComment';
 const { TextArea } = Input;
 
 function Comments(props) {
+    const dispatch = useDispatch()
 
     const [Comment, setComment] = useState("");
     const user = useSelector(state => state.user)
@@ -17,22 +19,32 @@ function Comments(props) {
     const onSubmit = (event) => {
         event.preventDefault();
 
-        const variable = {
+        const variables = {
             content: Comment,
             author: user.userData._id,
             postId: props.postId
         }
 
-        axios.post('/api/comment/saveComment', variable)
+        dispatch(saveComment(variables))
             .then(response => {
-                if (response.data.success) {
+                if (response.payload.success) {
                     setComment('');
-                    props.refreshFunction(response.data.result)
+                    props.refreshFunction(response.payload.result)
                 } else {
-                    // alert('Failed to save comment')
-                    alert('You are not allowed to do that. Please LogIn stupid')
+                    alert('You are not allowed to do that. Please Log In stupid')
                 }
             })
+
+        // axios.post('/api/comment/saveComment', variable)
+        //     .then(response => {
+        //         if (response.data.success) {
+        //             setComment('');
+        //             props.refreshFunction(response.data.result)
+        //         } else {
+        //             // alert('Failed to save comment')
+        //             alert('You are not allowed to do that. Please Log In stupid')
+        //         }
+        //     })
     }
 
     const handleChange = (event) => {

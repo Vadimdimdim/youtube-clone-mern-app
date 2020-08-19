@@ -21,3 +21,8 @@ export const GET_VIDEO = 'get_video';
 export const GET_VIDEOS = 'get_videos';
 
 export const GET_SUBSCRIPTION_VIDEOS = 'get_subscription_videos';
+
+//COMMENT TYPES
+export const SAVE_COMMENT = 'save_comment';
+
+export const GET_COMMENTS = 'get_comments';

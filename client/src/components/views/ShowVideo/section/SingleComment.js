@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import axios from 'axios';
-import { useSelector } from 'react-redux';
+// import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { saveComment } from "../../../../actions/comment_actions";
 
 import { Comment, Avatar, Button, Input } from 'antd';
 import LikeDislike from './LikeDislike';
@@ -8,6 +9,7 @@ import LikeDislike from './LikeDislike';
 const { TextArea } = Input;
 
 function SingleComment(props) {
+    const dispatch = useDispatch()
 
     const [CommentValue, setCommentValue] = useState("")
     const [OpenReply, setOpenReply] = useState(false)
@@ -23,18 +25,29 @@ function SingleComment(props) {
             content: CommentValue
         }
 
-        axios.post('/api/comment/saveComment', variables)
+        dispatch(saveComment(variables))
             .then(response => {
-                if (response.data.success) {
-                    // console.log('Reply', response.data.result)
+                if (response.payload.success) {
                     setCommentValue("")
                     setOpenReply(!OpenReply)
-                    props.refreshFunction(response.data.result)
+                    props.refreshFunction(response.payload.result)
                 } else {
-                    // alert('Failed to save comment')
-                    alert('You are not allowed to do that. Please LogIn stupid')
+                    alert('You are not allowed to do that. Please Log In stupid')
                 }
             })
+
+        // axios.post('/api/comment/saveComment', variables)
+        //     .then(response => {
+        //         if (response.data.success) {
+        //             // console.log('Reply', response.data.result)
+        //             setCommentValue("")
+        //             setOpenReply(!OpenReply)
+        //             props.refreshFunction(response.data.result)
+        //         } else {
+        //             // alert('Failed to save comment')
+        //             alert('You are not allowed to do that. Please LogIn stupid')
+        //         }
+        //     })
     }
 
     const handleChange = (event) => {
