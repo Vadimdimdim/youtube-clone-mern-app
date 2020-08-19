@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { List, Avatar, Row, Col } from 'antd';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { getVideo } from "../../../actions/video_actions";
+import { getComments } from "../../../actions/comment_actions";
 
 import SideVideo from './section/SideVideo';
 import Comments from './section/Comments';
@@ -29,17 +29,17 @@ function ShowVideo(props) {
                 if (response.payload.success) {
                     setVideo(response.payload.video);
                 } else {
-                    alert("Failed get video");
+                    alert("Failed to get video");
                 }
             })
 
         //populate comments
-        axios.post('/api/comment/getComments', variable)
+        dispatch(getComments(variable))
             .then(response => {
-                if (response.data.success) {
-                    setCommentList(response.data.comments);
+                if (response.payload.success) {
+                    setCommentList(response.payload.comments);
                 } else {
-                    alert("Couldn't get comments");
+                    alert("Failed to get comments");
                 }
             })
     }, [])

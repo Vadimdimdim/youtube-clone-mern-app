@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-// import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveComment } from "../../../../actions/comment_actions";
 
 import { Button, Input } from 'antd';
+
 import SingleComment from './SingleComment';
 import ReplyComment from './ReplyComment';
 
@@ -34,17 +34,6 @@ function Comments(props) {
                     alert('You are not allowed to do that. Please Log In stupid')
                 }
             })
-
-        // axios.post('/api/comment/saveComment', variable)
-        //     .then(response => {
-        //         if (response.data.success) {
-        //             setComment('');
-        //             props.refreshFunction(response.data.result)
-        //         } else {
-        //             // alert('Failed to save comment')
-        //             alert('You are not allowed to do that. Please Log In stupid')
-        //         }
-        //     })
     }
 
     const handleChange = (event) => {

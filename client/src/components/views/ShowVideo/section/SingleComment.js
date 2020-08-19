@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-// import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveComment } from "../../../../actions/comment_actions";
 
 import { Comment, Avatar, Button, Input } from 'antd';
+
 import LikeDislike from './LikeDislike';
 
 const { TextArea } = Input;
@@ -35,19 +35,6 @@ function SingleComment(props) {
                     alert('You are not allowed to do that. Please Log In stupid')
                 }
             })
-
-        // axios.post('/api/comment/saveComment', variables)
-        //     .then(response => {
-        //         if (response.data.success) {
-        //             // console.log('Reply', response.data.result)
-        //             setCommentValue("")
-        //             setOpenReply(!OpenReply)
-        //             props.refreshFunction(response.data.result)
-        //         } else {
-        //             // alert('Failed to save comment')
-        //             alert('You are not allowed to do that. Please LogIn stupid')
-        //         }
-        //     })
     }
 
     const handleChange = (event) => {
