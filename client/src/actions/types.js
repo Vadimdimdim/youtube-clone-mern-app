@@ -26,3 +26,13 @@ export const GET_SUBSCRIPTION_VIDEOS = 'get_subscription_videos';
 export const SAVE_COMMENT = 'save_comment';
 
 export const GET_COMMENTS = 'get_comments';
+
+//SUBSCRIBE TYPES
+
+export const GET_SUBSCRIBERS = 'get_subscribers';
+
+export const IS_SUBSCRIBED = 'is_subscribed';
+
+export const SUBSCRIBE = 'subscribe';
+
+export const UNSUBSCRIBED = 'unsubscribe';

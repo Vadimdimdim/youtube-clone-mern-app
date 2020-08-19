@@ -4,18 +4,18 @@ const router = express.Router();
 const { Subscriber } = require("../models/subscriber");
 const { auth } = require("../middleware/auth");
 
-router.post("/subscribeNumber", (req, res) => {
+router.post("/getSubscribers", (req, res) => {
     Subscriber.find({"userTo": req.body.userTo})
         .exec((err, subscribe) => {
             if(err) return res.json({ success: false, err });
             return res.status(200).json({
                 success: true,
-                subscribeNumber: subscribe.length
+                getSubscribers: subscribe.length
             });
         })
 });
 
-router.post("/subscribed", auth, (req, res) => {
+router.post("/isSubscribed", auth, (req, res) => {
     Subscriber.find({"userTo": req.body.userTo, "userFrom": req.body.userFrom})
         .exec((err, subscribe) => {
             if(err) return res.json({ success: false, err });
@@ -44,7 +44,7 @@ router.post("/subscribe", auth, (req, res) => {
     })
 });
 
-router.post("/unSubscribe", auth, (req, res) => {
+router.post("/unsubscribe", auth, (req, res) => {
     Subscriber.findOneAndDelete({ userTo: req.body.userTo, userFrom: req.body.userFrom })
         .exec((err, doc)=>{
             if(err) return res.status(400).json({ success: false, err});

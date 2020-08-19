@@ -1,8 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {Button} from 'antd';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Button } from 'antd';
+import { useDispatch } from 'react-redux';
+import {
+    getSubscribers,
+    isSubscribed,
+    subscribe,
+    unsubscribe
+} from "../../../../actions/subscribe_actions";
 
 function Subscriber(props) {
+    const dispatch = useDispatch()
+
     const userTo = props.userTo;
     const userFrom = props.userFrom;
 
@@ -10,77 +18,74 @@ function Subscriber(props) {
     const [Subscribed, setSubscribed] = useState(false)
 
     const onSubscribe = () => {
-        let subscribeVariables = {
+        let variables = {
             userTo: userTo,
             userFrom: userFrom
         }
-        // console.log(subscribeVariables)
 
-        if(Subscribed){
-            //when we are alreay subscribed
-            axios.post('/api/subscribe/unSubscribe', subscribeVariables)
+        if (Subscribed) {
+            //when user is already subscribed
+            dispatch(unsubscribe(variables))
                 .then(response => {
-                    if(response.data.success){
+                    if (response.payload.success) {
                         setSubscribeNumber(SubscribeNumber - 1)
                         setSubscribed(!Subscribed)
-                    }else{
-                        alert('You are not allowed to do that. Please LogIn stupid')
+                    } else {
+                        alert('You are not allowed to do that. Please Log In stupid')
                     }
                 })
-        }else{
-            axios.post('/api/subscribe/subscribe', subscribeVariables)
+        } else {
+            dispatch(subscribe(variables))
                 .then(response => {
-                    if(response.data.success){
+                    if (response.payload.success) {
                         setSubscribeNumber(SubscribeNumber + 1)
                         setSubscribed(!Subscribed)
-                    }else{
-                        alert('You are not allowed to do that. Please LogIn stupid')
+                    } else {
+                        alert('You are not allowed to do that. Please Log In stupid')
                     }
                 })
         }
     }
 
     useEffect(() => {
-        const subscribeNumberVariables = { userTo: userTo, userFrom: userFrom}
+        const variables = {
+            userTo: userTo,
+            userFrom: userFrom
+        }
 
-        axios.post('/api/subscribe/subscribeNumber', subscribeNumberVariables)
+        dispatch(getSubscribers(variables))
             .then(response => {
-                if(response.data.success){
-                    // console.log(response.data.subscribeNumber);
-                }else{
+                if (response.payload.success) {
+                    // console.log(response.payload.subscribeNumber);
+                } else {
                     alert("Failed to get subscriber data")
                 }
             })
-            .catch(err => {
-                console.log(err);
-            })
 
-        axios.post('/api/subscribe/subscribed', subscribeNumberVariables)
+        dispatch(isSubscribed(variables))
             .then(response => {
-                if(response.data.success){
-                    // console.log(response.data.subscribed);
-                    setSubscribed(response.data.subscribed);
-                }else{
-                    // alert("Failed to get subscriber data")
+                if (response.payload.success) {
+                    setSubscribed(response.payload.subscribed);
+                } else {
+                    console.log("Failed to get subscriber data")
                 }
-            })
-            .catch(err => {
-                console.log(err);
             })
     }, [])
 
     return (
         <div>
-            <Button 
+            <Button
                 onClick={onSubscribe}
                 style={
-                {backgroundColor: `${Subscribed ? '#AAAAAA' : '#fcc8ae'}`, 
-                borderRadius: '4px', 
-                color: 'white', 
-                padding: '10px 16px 30px 16px', 
-                fontWeight: '500', 
-                textTransform: 'uppercase'}}>
-                {Subscribed? 'Subscribed' : 'Subscribe'}
+                    {
+                        backgroundColor: `${Subscribed ? '#AAAAAA' : '#fcc8ae'}`,
+                        borderRadius: '4px',
+                        color: 'white',
+                        padding: '10px 16px 30px 16px',
+                        fontWeight: '500',
+                        textTransform: 'uppercase'
+                    }}>
+                {Subscribed ? 'Subscribed' : 'Subscribe'}
             </Button>
             <p>{SubscribeNumber} Subscribers</p>
         </div>
