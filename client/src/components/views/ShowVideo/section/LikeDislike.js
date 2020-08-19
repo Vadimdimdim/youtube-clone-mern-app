@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import {
+    getLikes,
+    getDislikes,
+    addLike,
+    removeLike,
+    addDislike,
+    removeDislike
+} from "../../../../actions/like_actions";
 
 import { Tooltip } from 'antd';
 import { LikeOutlined, LikeFilled, DislikeOutlined, DislikeFilled } from '@ant-design/icons';
 
 function LikeDislike(props) {
+    const dispatch = useDispatch()
 
     const [Likes, setLikes] = useState(0);
     const [LikeAction, setLikeAction] = useState(null)
@@ -12,59 +21,61 @@ function LikeDislike(props) {
     const [Dislikes, setDislikes] = useState(0)
     const [DislikeAction, setDislikeAction] = useState(null)
 
-    let variable = {};
+    let variables = {};
 
     if (props.video) {
-        variable = { videoId: props.videoId, userId: props.userId }
+        variables = {
+            videoId: props.videoId,
+            userId: props.userId
+        }
     } else {
-        variable = { commentId: props.commentId, userId: props.userId }
+        variables = {
+            commentId: props.commentId,
+            userId: props.userId
+        }
     }
 
     useEffect(() => {
-        axios.post('/api/like/getLikes', variable)
+        dispatch(getLikes(variables))
             .then(response => {
-                if (response.data.success) {
-                    //How many likes does this video or comment have
-                    setLikes(response.data.likes.length);
+                if (response.payload.success) {
+                    //How many likes does this video/comment have
+                    setLikes(response.payload.likes.length);
 
-                    //Check if user already liked this video or not
-                    response.data.likes.map(like => {
+                    //Check if user already liked this video/comment
+                    response.payload.likes.map(like => {
                         if (like.userId === props.userId) {
                             setLikeAction('liked')
                         }
                     })
-
                 } else {
-                    alert('Failed to get like data')
+                    alert("Failed to get likes");
                 }
             })
-    }, [])
 
-    useEffect(() => {
-        axios.post('/api/like/getDislikes', variable)
+        dispatch(getDislikes(variables))
             .then(response => {
-                if (response.data.success) {
+                if (response.payload.success) {
                     //How many likes does this video or comment have
-                    setDislikes(response.data.dislikes.length);
+                    setDislikes(response.payload.dislikes.length);
 
                     //Check if user already liked this video or not
-                    response.data.dislikes.map(like => {
+                    response.payload.dislikes.map(like => {
                         if (like.userId === props.userId) {
                             setDislikeAction('disliked')
                         }
                     })
-
                 } else {
-                    alert('Failed to get dislike data')
+                    alert("Failed to get dislikes");
                 }
             })
     }, [])
 
     const onLike = () => {
         if (LikeAction === null) {
-            axios.post('/api/like/upLike', variable)
+            dispatch(addLike(variables))
                 .then(response => {
-                    if (response.data.success) {
+                    if (response.payload.success) {
                         setLikes(Likes + 1)
                         setLikeAction('liked')
 
@@ -74,20 +85,18 @@ function LikeDislike(props) {
                             setDislikeAction(null)
                             setDislikes(Dislikes - 1)
                         }
-
                     } else {
-                        alert('You are not allowed to do that. Please LogIn stupid')
+                        alert('You are not allowed to do that. Please Log In stupid')
                     }
                 })
         } else {
-            axios.post('/api/like/unLike', variable)
+            dispatch(removeLike(variables))
                 .then(response => {
-                    if (response.data.success) {
-                        setLikes(Likes - 1)
+                    if (response.payload.success) {
+                        etLikes(Likes - 1)
                         setLikeAction(null)
                     } else {
-                        // alert('Failed to unlike the video')
-                        alert('You are not allowed to do that. Please LogIn stupid')
+                        alert('You are not allowed to do that. Please Log In stupid')
                     }
                 })
         }
@@ -95,20 +104,19 @@ function LikeDislike(props) {
 
     const onDislike = () => {
         if (DislikeAction !== null) {
-            axios.post('/api/like/unDislike', variable)
+            dispatch(removeDislike(variables))
                 .then(response => {
-                    if (response.data.success) {
+                    if (response.payload.success) {
                         setDislikes(Dislikes - 1)
                         setDislikeAction(null)
                     } else {
-                        // alert('Failed to undislike the video')
-                        alert('You are not allowed to do that. Please LogIn stupid')
+                        alert('You are not allowed to do that. Please Log In stupid')
                     }
                 })
         } else {
-            axios.post('/api/like/upDislike', variable)
+            dispatch(addDislike(variables))
                 .then(response => {
-                    if (response.data.success) {
+                    if (response.payload.success) {
                         setDislikes(Dislikes + 1)
                         setDislikeAction('disliked')
 
@@ -117,10 +125,8 @@ function LikeDislike(props) {
                             setLikeAction(null)
                             setLikes(Likes - 1)
                         }
-
                     } else {
-                        // alert('Failed to dislike the video')
-                        alert('You are not allowed to do that. Please LogIn stupid')
+                        alert('You are not allowed to do that. Please Log In stupid')
                     }
                 })
         }
