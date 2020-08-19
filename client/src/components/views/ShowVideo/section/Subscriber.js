@@ -56,7 +56,7 @@ function Subscriber(props) {
         dispatch(getSubscribers(variables))
             .then(response => {
                 if (response.payload.success) {
-                    // console.log(response.payload.subscribeNumber);
+                    setSubscribeNumber(response.payload.getSubscribers)
                 } else {
                     alert("Failed to get subscriber data")
                 }
